@@ -13,18 +13,19 @@
 
         public void ImportAndPrintData(string fileToImport, bool printData = true)
         {
-            ImportedObjects = new List<ImportedObject>() { new ImportedObject() };
+            ImportedObjects = new List<ImportedObject>() ;
 
             var streamReader = new StreamReader(fileToImport);
 
             var importedLines = new List<string>();
             while (!streamReader.EndOfStream)
             {
-                var line = streamReader.ReadLine();
+                var line = streamReader.ReadLine().Trim();
+                if (line.Length == 0) continue;
                 importedLines.Add(line);
             }
 
-            for (int i = 0; i <= importedLines.Count; i++)
+            for (int i = 1; i < importedLines.Count; i++)
             {
                 var importedLine = importedLines[i];
                 var values = importedLine.Split(';');
@@ -35,7 +36,7 @@
                 importedObject.ParentName = values[3];
                 importedObject.ParentType = values[4];
                 importedObject.DataType = values[5];
-                importedObject.IsNullable = values[6];
+                importedObject.IsNullable = (values.Count() > 6) ? values[6] : "1";
                 ((List<ImportedObject>)ImportedObjects).Add(importedObject);
             }
 
